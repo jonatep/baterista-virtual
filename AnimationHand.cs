@@ -1,15 +1,6 @@
 using UnityEngine;
-    public class Animation :  MonoBehaviour
+    public class AnimationHand :  MonoBehaviour
     {
-        public Transform LeftFootTarget;
-        public Transform LeftHandTarget;
-
-        public Transform RightFootTarget;
-        public Transform RightHandTarget;
-
-        public Transform PelvisTarget;
-
-        public Transform LookTarget;
 
         private bool raised;
 
@@ -19,32 +10,41 @@ using UnityEngine;
 
         private Transform parteCuerpo;
 
+        private float tiltAroundX = -60.0f;
+
+        private float smooth = 20.0f;
+
         public void moveHand(GameObject gameTarget, Transform parteCuerpoRecibida)
         {
                 Vector3 target_position = gameTarget.transform.position;
 
-                double firstPosition_y = (double) target_position.y;
-                Vector3 firstPosition = target_position;
-                firstPosition_y += 0.8;
-                firstPosition.y = (float) firstPosition_y;
-                parteCuerpoRecibida.position = firstPosition;
-                raised = true;
+                // double firstPosition_y = (double) target_position.y;
+                // Vector3 firstPosition = target_position;
+                // firstPosition_y += 0.5;
+                // firstPosition.y = (float) firstPosition_y;
+                parteCuerpoRecibida.position = target_position;
+                Quaternion target_angle = Quaternion.Euler(tiltAroundX, 0, 0);
+                parteCuerpoRecibida.rotation = target_angle;
+
                 target = gameTarget;
                 parteCuerpo = parteCuerpoRecibida;
         }
         public void LateUpdate()
         {
+            // if(raised)
+            // {
 
-            if(raised)
-            {
                 normDist = Mathf.Clamp((Vector3.Distance(parteCuerpo.position, target.transform.position) - 0.3f) / 1f, 0, 1);
                 parteCuerpo.position = Vector3.Lerp(parteCuerpo.position, target.transform.position, normDist);
-                if(normDist == 1)
-                {
-                    raised = false;
-                    normDist = 0;
-                }
-            }
+                Quaternion target_angle = Quaternion.Euler(0, 0, 0);
+                parteCuerpo.rotation = Quaternion.Slerp(parteCuerpo.rotation, target_angle,  Time.deltaTime * smooth);
+                // print(parteCuerpo.rotation);
+                // if(normDist == 1)
+                // {
+                //     raised = false;
+                //     normDist = 0;
+                // }
+            // }
             // //move step & attraction
             // Step.Translate(Vector3.forward * Time.deltaTime * 0.7f);
             // if (Step.position.z > 1f)

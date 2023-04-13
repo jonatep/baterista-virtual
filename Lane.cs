@@ -20,12 +20,13 @@ public class Lane : MonoBehaviour
         int [] restrictions = noteRestriction.Select(s => (int) s).ToArray();
         foreach (var note in array)
         {
+            // print(note.NoteNumber + 12);
             // if (note.NoteNumber + 12 == (int) noteRestriction[0])
             if (restrictions.Contains(note.NoteNumber + 12))
             {
                 var metricTimeSpan = TimeConverter.ConvertTo<MetricTimeSpan> (note.Time, DrumManager.midiFile.GetTempoMap());
                 double timing = (double)metricTimeSpan.Minutes * 60f + metricTimeSpan.Seconds + (double)metricTimeSpan.Milliseconds / 1000f;
-                timeStamps.Add(timing - 1);
+                timeStamps.Add(timing-2);
             }
         }
     }
@@ -42,8 +43,16 @@ public class Lane : MonoBehaviour
         {
             if (DrumManager.GetAudioSourceTime() >= timeStamps[spawnIndex] - DrumManager.Instance.noteTime)
             {
-                Animation animator = FindObjectOfType<Animation>();
-                animator.moveHand(notePrefab, parteCuerpo);
+                if(parteCuerpo.name == "Drumstick_Right" || parteCuerpo.name == "Drumstick_Left")
+                {
+                    AnimationHand animator = FindObjectOfType<AnimationHand>();
+                    animator.moveHand(notePrefab, parteCuerpo);
+                }
+                else
+                {
+                    AnimationFoot animatorFoot = FindObjectOfType<AnimationFoot>();
+                    animatorFoot.moveFoot(notePrefab, parteCuerpo); 
+                }
                 spawnIndex++;
             }
         }
