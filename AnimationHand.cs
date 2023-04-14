@@ -14,16 +14,23 @@ using UnityEngine;
 
         private float smooth = 20.0f;
 
+        public Transform LookTarget;
+
         public void moveHand(GameObject gameTarget, Transform parteCuerpoRecibida)
         {
                 Vector3 target_position = gameTarget.transform.position;
-
                 // double firstPosition_y = (double) target_position.y;
                 // Vector3 firstPosition = target_position;
                 // firstPosition_y += 0.5;
                 // firstPosition.y = (float) firstPosition_y;
                 parteCuerpoRecibida.position = target_position;
                 Quaternion target_angle = Quaternion.Euler(tiltAroundX, 0, 0);
+
+
+                Vector3 lookAtPosition = target_position;
+                lookAtPosition.y = LookTarget.position.y;
+                LookTarget.position = lookAtPosition;
+
                 parteCuerpoRecibida.rotation = target_angle;
 
                 target = gameTarget;
