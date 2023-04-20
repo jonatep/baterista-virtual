@@ -19,13 +19,41 @@ public class DrumManager : MonoBehaviour
     public static MidiFile midiFile;
 
     public Lane[] lanes;
+
+    private string rutaMIDI;
+    private string rutaMP3;
+
+    private void OnEnable() 
+    {
+        rutaMIDI = PlayerPrefs.GetString("rutaMIDI");
+        rutaMP3 = PlayerPrefs.GetString("rutaMP3");
+    }
     
     private void ReadFromFile()
     {
-        midiFile = MidiFile.Read(Application.streamingAssetsPath + "/" + fileLocation);
+        midiFile = MidiFile.Read(rutaMIDI);
         GetDataFromMidi();
     }
+    IEnumerator ChangeAudioClip()
+    {
+        audioSource = gameObject.AddComponent<AudioSource>();
+        using (UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip(rutaMP3, AudioType.MPEG))
+        {
+        
+            yield return www.SendWebRequest();
 
+            if (www.result == UnityWebRequest.Result.ConnectionError)
+            {
+                Debug.Log(www.error);
+            }
+            else
+            {
+                AudioClip myClip = DownloadHandlerAudioClip.GetContent(www);
+                audioSource.clip = myClip;
+                ReadFromFile();
+            }
+        }
+    }
     public void GetDataFromMidi()
     {
         var allNotes = midiFile.GetNotes();
@@ -41,7 +69,6 @@ public class DrumManager : MonoBehaviour
         notes.CopyTo(array, 0);
 
         foreach (var lane in lanes) lane.SetTimeStamps(array);
-
         Invoke(nameof(StartSong), songDelayInSeconds);
     }
 
@@ -59,7 +86,7 @@ public class DrumManager : MonoBehaviour
     void Start()
     {
         Instance = this;
-        ReadFromFile();
+        StartCoroutine(ChangeAudioClip());
     }
 
     // Update is called once per frame
