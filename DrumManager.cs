@@ -22,11 +22,12 @@ public class DrumManager : MonoBehaviour
 
     private string rutaMIDI;
     private string rutaMP3;
-
+    private float volumen;
     private void OnEnable() 
     {
         rutaMIDI = PlayerPrefs.GetString("rutaMIDI");
         rutaMP3 = PlayerPrefs.GetString("rutaMP3");
+        volumen = PlayerPrefs.GetFloat("volumen");
     }
     
     private void ReadFromFile()
@@ -50,6 +51,7 @@ public class DrumManager : MonoBehaviour
             {
                 AudioClip myClip = DownloadHandlerAudioClip.GetContent(www);
                 audioSource.clip = myClip;
+                audioSource.volume = volumen;
                 ReadFromFile();
             }
         }
