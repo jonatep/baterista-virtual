@@ -13,16 +13,17 @@ public class Lane : MonoBehaviour
 
     public Transform parteCuerpo;
 
+    public string direccionMirar;
 
     int spawnIndex = 0;
-    public void SetTimeStamps(Melanchall.DryWetMidi.Interaction.Note[] array)
+    public void SetTimeStamps(Melanchall.DryWetMidi.Interaction.Note[] array, int velocidad)
     {
         int [] restrictions = noteRestriction.Select(s => (int) s).ToArray();
         foreach (var note in array)
         {
             // print(note.NoteNumber + 12);
             // if (note.NoteNumber + 12 == (int) noteRestriction[0])
-            if (restrictions.Contains(note.NoteNumber + 12))
+            if (restrictions.Contains(note.NoteNumber + 12) && note.Velocity >= velocidad)
             {
                 var metricTimeSpan = TimeConverter.ConvertTo<MetricTimeSpan> (note.Time, DrumManager.midiFile.GetTempoMap());
                 double timing = (double)metricTimeSpan.Minutes * 60f + metricTimeSpan.Seconds + (double)metricTimeSpan.Milliseconds / 1000f;
@@ -33,7 +34,16 @@ public class Lane : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        if(parteCuerpo.name == "Drumstick_Right" || parteCuerpo.name == "Drumstick_Left")
+        {
+            AnimationHand animator = FindObjectOfType<AnimationHand>();
+            animator.setTargets(notePrefab, parteCuerpo);
+        }
+        else
+        {
+            AnimationFoot animatorFoot = FindObjectOfType<AnimationFoot>();
+            animatorFoot.setTargets(notePrefab, parteCuerpo); 
+        }
     }
 
     // Update is called once per frame
@@ -46,7 +56,7 @@ public class Lane : MonoBehaviour
                 if(parteCuerpo.name == "Drumstick_Right" || parteCuerpo.name == "Drumstick_Left")
                 {
                     AnimationHand animator = FindObjectOfType<AnimationHand>();
-                    animator.moveHand(notePrefab, parteCuerpo);
+                    animator.moveHand(notePrefab, parteCuerpo, direccionMirar);
                 }
                 else
                 {

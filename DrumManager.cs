@@ -6,6 +6,8 @@ using Melanchall.DryWetMidi.Interaction;
 using System.IO;
 using UnityEngine.Networking;
 using Melanchall.DryWetMidi.Standards;
+using UnityEngine.SceneManagement;
+
 public class DrumManager : MonoBehaviour
 {
 
@@ -23,11 +25,13 @@ public class DrumManager : MonoBehaviour
     private string rutaMIDI;
     private string rutaMP3;
     private float volumen;
+    private int velocidad;
     private void OnEnable() 
     {
         rutaMIDI = PlayerPrefs.GetString("rutaMIDI");
         rutaMP3 = PlayerPrefs.GetString("rutaMP3");
         volumen = PlayerPrefs.GetFloat("volumen");
+        velocidad = PlayerPrefs.GetInt("velocidad");
     }
     
     private void ReadFromFile()
@@ -70,7 +74,7 @@ public class DrumManager : MonoBehaviour
         var array = new Melanchall.DryWetMidi.Interaction.Note[notes.Count];
         notes.CopyTo(array, 0);
 
-        foreach (var lane in lanes) lane.SetTimeStamps(array);
+        foreach (var lane in lanes) lane.SetTimeStamps(array, velocidad);
         Invoke(nameof(StartSong), songDelayInSeconds);
     }
 
@@ -92,8 +96,8 @@ public class DrumManager : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    public void SalirAnimacion()
     {
-        
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
     }
 }
