@@ -14,13 +14,11 @@ public class DrumManager : MonoBehaviour
     public static DrumManager Instance;
     public AudioSource audioSource;
     public float songDelayInSeconds;
-    public int inputDelayInMillieconds;
-    public string fileLocation;
     public float noteTime;
 
     public static MidiFile midiFile;
 
-    public Lane[] lanes;
+    public Instrument[] instruments;
 
     private string rutaMIDI;
     private string rutaMP3;
@@ -74,7 +72,7 @@ public class DrumManager : MonoBehaviour
         var array = new Melanchall.DryWetMidi.Interaction.Note[notes.Count];
         notes.CopyTo(array, 0);
 
-        foreach (var lane in lanes) lane.SetTimeStamps(array, velocidad);
+        foreach (var instrument in instruments) instrument.SetTimeStamps(array, velocidad);
         Invoke(nameof(StartSong), songDelayInSeconds);
     }
 

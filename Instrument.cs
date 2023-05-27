@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using Melanchall.DryWetMidi.Interaction;
 using System.Linq;
-public class Lane : MonoBehaviour
+public class Instrument : MonoBehaviour
 {
 
     public Melanchall.DryWetMidi.Standards.GeneralMidi2RoomPercussion[] noteRestriction;
     public GameObject notePrefab;
-    List<Note> notes = new List<Note>();
     public List<double> timeStamps;
 
     public Transform parteCuerpo;
@@ -21,8 +20,6 @@ public class Lane : MonoBehaviour
         int [] restrictions = noteRestriction.Select(s => (int) s).ToArray();
         foreach (var note in array)
         {
-            // print(note.NoteNumber + 12);
-            // if (note.NoteNumber + 12 == (int) noteRestriction[0])
             if (restrictions.Contains(note.NoteNumber + 12) && note.Velocity >= velocidad)
             {
                 var metricTimeSpan = TimeConverter.ConvertTo<MetricTimeSpan> (note.Time, DrumManager.midiFile.GetTempoMap());
@@ -66,14 +63,5 @@ public class Lane : MonoBehaviour
                 spawnIndex++;
             }
         }
-        // if (spawnIndex < raiseHandTimings.Count)
-        // {
-        //     if (DrumManager.GetAudioSourceTime() >= raiseHandTimings[spawnIndex] - DrumManager.Instance.noteTime - 10)
-        //     {
-        //         Animation animator = FindObjectOfType<Animation>();
-        //         animator.moveHand(notePrefab, true);
-        //         spawnIndex++;
-        //     }
-        // }
     }
 }
