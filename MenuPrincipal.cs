@@ -7,6 +7,7 @@ using UnityEditor;
 using TMPro;
 using System.Text.RegularExpressions;
 using System;
+using AnotherFileBrowser.Windows;
 public class MenuPrincipal : MonoBehaviour
 {
     static string rutaMIDI = null;
@@ -42,24 +43,37 @@ public class MenuPrincipal : MonoBehaviour
 
     public void SeleccionarMIDI()
     {
-        string path = EditorUtility.OpenFilePanel("Seleccionar MIDI", "", "mid");
-        if (path.Length != 0)
+        var bp = new BrowserProperties(); 
+        bp.filter = "midi files (*.mid)|*.mid";
+        bp.filterIndex = 0;
+
+        new FileBrowser().OpenFileBrowser(bp, path =>
         {
-            rutaMIDI = path;
-            archivoMIDI.text = path;
-            ComprobarArchivos();
-        }
+            if (path.Length != 0)
+            {
+                rutaMIDI = path;
+                archivoMIDI.text = path;
+                ComprobarArchivos();
+            }
+        });
     }
 
     public void SeleccionarMP3()
     {
-        string path = EditorUtility.OpenFilePanel("Seleccionar MP3", "", "mp3");
-        if (path.Length != 0)
+        var bp = new BrowserProperties(); 
+        bp.filter = "mp3 files (*.mp3)|*.mp3";
+        bp.filterIndex = 0;
+
+        new FileBrowser().OpenFileBrowser(bp, path =>
         {
-            rutaMP3 = "file:///" +  path;
-            archivoMP3.text = path;
-            ComprobarArchivos();
-        }
+            if (path.Length != 0)
+            {
+                rutaMP3 = "file:///" +  path;
+                archivoMP3.text = path;
+                ComprobarArchivos();
+            }
+        });
+
     }
 
     private void OnDisable() 
