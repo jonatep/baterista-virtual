@@ -22,8 +22,8 @@ public class DrumManager : MonoBehaviour
 
     private string rutaMIDI;
     private string rutaMP3;
-    private float volumen;
-    private int velocidad;
+    private float volumen = 1f;
+    private int velocidad = 0;
     private void OnEnable() 
     {
         rutaMIDI = PlayerPrefs.GetString("rutaMIDI");
